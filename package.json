@@ -1,0 +1,107 @@
+{
+  "name": "watson-desktop",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Watson desktop conversation and screen assistant",
+  "author": "Watson",
+  "main": "dist-electron/electron/main.js",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build:renderer && npm run build:electron && npm run build:native",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "build:native": "node scripts/build-native.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.electron.json",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "start": "electron .",
+    "preview": "vite --host 127.0.0.1",
+    "package:mac": "npm run build && electron-builder --mac dir",
+    "dist:mac": "npm run build && electron-builder --mac dmg",
+    "package:win": "npm run build:renderer && npm run build:electron && electron-builder --win zip --x64",
+    "server:dev": "npm --prefix server run dev",
+    "server:test": "npm --prefix server test",
+    "setup:electron": "install-electron",
+    "postinstall": "install-electron"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "mammoth": "^1.13.0",
+    "pdf-parse": "^1.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pdf-parse": "^1.1.4",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/ws": "^8.5.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "playwright": "^1.64.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.0"
+  },
+  "build": {
+    "appId": "com.watson.app",
+    "productName": "Watson",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "icon": "native/assets/Watson.icns",
+      "category": "public.app-category.productivity",
+      "target": "dmg",
+      "minimumSystemVersion": "13.0",
+      "hardenedRuntime": true,
+      "entitlements": "native/entitlements.plist",
+      "entitlementsInherit": "native/entitlements.plist",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Watson transcribes your microphone while a session is running.",
+        "NSScreenCaptureUsageDescription": "Watson captures selected screen context and system audio while a session is running."
+      },
+      "extraResources": [
+        {
+          "from": "native/bin/watson-capture",
+          "to": "watson-capture"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false,
+      "extraResources": [
+        {
+          "from": "native/windows/ConferenceActivity.ps1",
+          "to": "windows/ConferenceActivity.ps1"
+        },
+        {
+          "from": "native/windows/ConferenceActivity.cs",
+          "to": "windows/ConferenceActivity.cs"
+        }
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "config/update-config.json",
+        "to": "update-config.json"
+      }
+    ]
+  }
+}

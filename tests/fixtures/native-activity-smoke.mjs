@@ -1,0 +1,23 @@
+// Run manually on macOS14.2+ with a previously authorized fixture helper.
+// Opens input only after checking existing permission, stores no audio, contacts
+// no providers, and never asks TCC for new permission. Installed app is untouched.
+import { spawn } from 'node:child_process';
+import { createInterface } from 'node:readline';
+import { resolve } from 'node:path';
+const reader = process.env.WATSON_ACTIVITY_READER;
+const helper = process.env.WATSON_CAPTURE_FIXTURE_HELPER ?? resolve('native/bin/watson-capture');
+if (process.platform !== 'darwin' || !reader) { process.stdout.write(JSON.stringify({status:'skipped',reason:'Set WATSON_ACTIVITY_READER to the separately compiled temporary activity helper on macOS.'})+'\n'); process.exit(77); }
+async function request(binary,args) { const child=spawn(binary,args,{stdio:['ignore','pipe','pipe']});const rows=[];let stderr='';const lines=createInterface({input:child.stdout});lines.on('line',line=>{try{rows.push(JSON.parse(line));}catch{}});child.stderr.on('data',chunk=>{stderr+=String(chunk).slice(0,500);});return new Promise((done,fail)=>{const timer=setTimeout(()=>{child.kill('SIGKILL');fail(new Error('Native metadata request timed out'));},8000);child.on('error',fail);child.on('exit',code=>{clearTimeout(timer);lines.close();if(code)fail(new Error(stderr||`Helper exit ${code}`));else done(rows);});}); }
+const permission=(await request(helper,['--permissions'])).find(row=>row.type==='permissions');
+if(permission?.microphone!=='granted') { process.stdout.write(JSON.stringify({status:'skipped',reason:'Microphone was not already authorized. No permission prompt or capture was opened.',permission})+'\n');process.exit(77); }
+const scan=async(fixturePid)=>{const rows=await request(reader,['--activity',...(fixturePid?['--activity-pid',String(fixturePid)]:['--app-bundle-id','com.watson.capture']),'--exclude-pid',String(process.pid)]);const snapshot=rows.find(row=>row.type==='activity');if(!snapshot?.supported||snapshot.error)throw new Error(snapshot?.error??'Audio process metadata is unsupported');return snapshot;};
+const before=await scan();const child=spawn(helper,['--capture','--microphone','--no-system','--exclude-pid',String(process.pid)],{stdio:['pipe','pipe','pipe']});let ready=false;let audioChunks=0;let captureError;let captureExit;
+const lines=createInterface({input:child.stdout});lines.on('line',line=>{try{const row=JSON.parse(line);if(row.type==='status'&&row.status==='capturing')ready=true;if(row.type==='audio')audioChunks++;if(row.type==='error')captureError=row.message;}catch{}});child.stderr.resume();
+child.on('error',error=>{captureError=error.message;});child.on('exit',code=>{captureExit=code;});
+const delay=milliseconds=>new Promise(done=>setTimeout(done,milliseconds));
+let during;let after;let bundleScopedInput=false;
+try { for(let count=0;count<150&&!ready&&!captureError&&captureExit===undefined;count++)await delay(100);if(!ready||captureError)throw new Error(captureError??`Input fixture did not become ready within 15 seconds (exit: ${captureExit??'still running'}). No activity verification claimed.`);for(let count=0;count<20;count++){during=await scan(child.pid);if(during.processes.some(row=>row.pid===child.pid&&row.inputActive))break;await delay(100);}if(!during.processes.some(row=>row.pid===child.pid&&row.inputActive))throw new Error('HAL did not expose the fixture input activity; no actual activity verification claimed.');const production=await scan();bundleScopedInput=production.processes.some(row=>row.pid===child.pid&&row.bundleId==='com.watson.capture'&&row.inputActive);if(!bundleScopedInput)throw new Error('Bundle-scoped production reader did not find the live fixture input.'); }
+finally {child.stdin.write('stop\n');child.kill('SIGTERM');await new Promise(done=>{const timer=setTimeout(()=>{child.kill('SIGKILL');done();},3000);child.once('exit',()=>{clearTimeout(timer);done();});});lines.close();}
+for(let count=0;count<20;count++){after=await scan(child.pid);if(!after.processes.some(row=>row.pid===child.pid&&(row.inputActive||row.outputActive)))break;await delay(100);}
+if(after.processes.some(row=>row.pid===child.pid&&(row.inputActive||row.outputActive)))throw new Error('Fixture activity remained active after input closed.');
+process.stdout.write(JSON.stringify({status:'passed',beforeInput:before.processes.some(row=>row.inputActive),fixturePid:child.pid,duringInput:true,bundleScopedInput,afterInput:false,audioChunksDiscarded:audioChunks,audioPersisted:false,providerRequests:0,permissionPrompts:0,actualHalBundleId:during.processes.find(row=>row.pid===child.pid)?.bundleId,scope:'same-user fixture PID and production bundle scope'})+'\n');

@@ -1,0 +1,6 @@
+{
+  "name": "watson-cloud", "version": "0.1.0", "private": true, "type": "module",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": { "dev": "node --experimental-strip-types src/main.ts", "start": "node dist/main.js", "build": "tsc -p tsconfig.json", "typecheck": "tsc --noEmit -p tsconfig.json", "test": "node --experimental-strip-types --test tests/*.test.ts" },
+  "devDependencies": { "@types/node": "24.0.0", "typescript": "5.8.3" }
+}

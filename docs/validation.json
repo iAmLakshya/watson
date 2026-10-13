@@ -1,0 +1,194 @@
+{
+  "snapshotDate": "2026-10-13",
+  "validatedAt": "2026-10-12T04:45:12.716Z",
+  "applicationVersion": "0.4.0",
+  "mobileVersion": "0.1.0",
+  "scope": "Published summary of completed local development validation. Raw logs, runtime profiles, recordings, screenshots, and development archives remain local and are excluded from Git.",
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "scope": "Production renderer, Electron TypeScript and Swift helper"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "scope": "Renderer/shared and Electron TypeScript"
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 225,
+      "passed": 225,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Capture/provider contracts, real HTTP cloud fixtures, Smart/context/meeting/preparation, media brokers, signed update staging, Windows protocol/IPC and bounded document parsing"
+    },
+    {
+      "command": "node server/tools/validate.mjs",
+      "exitCode": 0,
+      "tests": 65,
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Actual HTTP/SQLite accounts, revisions, roles, analytics, recovery/email transport, encrypted audio, private inference and isolated connectors"
+    },
+    {
+      "command": "node evidence/run-desktop-smoke.mjs",
+      "exitCode": 0,
+      "passed": 27,
+      "scope": "Actual packaged GUI/IPC and persisted labeled fixture data; mock Keychain, no recording/paid providers"
+    },
+    {
+      "command": "node evidence/run-cloud-gui-smoke.mjs",
+      "exitCode": 0,
+      "passed": 10,
+      "scope": "Actual packaged GUI and temporary Node/SQLite, explicit sync/public sharing, consent-reviewed synthetic5MiB audio upload/verified export/delete, organization/plan/signout"
+    },
+    {
+      "command": "node evidence/run-onboarding-ui-smoke.mjs",
+      "exitCode": 0,
+      "passed": 10,
+      "scope": "Actual first-run guided demo, diagnostics, Smart preferences, disabled activity observation, labeled alert visual fixture and unconfigured updates"
+    },
+    {
+      "command": "node tools/verify-package.mjs release/v0.4.0/mac-arm64/Watson.app",
+      "exitCode": 0,
+      "matchedFiles": 57,
+      "scope": "All built-file hashes, icon/helper, update configuration and deep strict ad-hoc signature"
+    },
+    {
+      "command": "python3 tools/verify-windows-package.py",
+      "exitCode": 0,
+      "matchedFiles": 57,
+      "scope": "Windows ZIP x64 PE, all built-file hashes and packaged PowerShell/C#/update configuration; no Windows launch"
+    }
+  ],
+  "mobile": {
+    "nativePassed": 52,
+    "regularUiPassed": 4,
+    "portablePassed": 48,
+    "regularSkippedIntegrationCases": 4,
+    "currentActualCloudAndWavWireReruns": 2
+  },
+  "mobileBuilds": {
+    "arm64Simulator": {
+      "success": true,
+      "includesXCTestPayload": false
+    },
+    "arm64Device": {
+      "success": true,
+      "signed": false
+    },
+    "physicalDeviceVerified": false
+  },
+  "privateRecordingIntegration": {
+    "actualSwiftToNodeCloudClient": true,
+    "actualCompleteWavToEncryptedStorage": true,
+    "completeUploadBytes": 4800044,
+    "completeUploadSeconds": 150,
+    "audioSource": "Generated CAF segments; synthetic audio, not a real meeting.",
+    "nativeStoreAndAudioUiScope": "Historical v0.3 isolated audio flow; unchanged audio controllers. Current v0.4 whole-WAV wire and basic cloud tests rerun; current native/core/UI regression and clean builds passed."
+  },
+  "captureExclusion": {
+    "defaultEnabled": true,
+    "appliedBeforeWindowPresentation": true,
+    "freshNativeWindowFlags": [
+      {
+        "view": "overlay",
+        "protected": true
+      },
+      {
+        "view": "dashboard",
+        "protected": true
+      }
+    ],
+    "compatibilityScope": "User confirmed their tested Google Meet setup; all capture paths are not proven"
+  },
+  "runtimeAcceptance": {
+    "guiLaunchWithMockKeychain": true,
+    "realUIAndIPC": true,
+    "persistence": true,
+    "realMicrophonePCM": true,
+    "realSystemAudio": false,
+    "realScreenCapture": false,
+    "realTranscription": false,
+    "realModelResponses": false,
+    "universalShareExclusion": false,
+    "liveLatencyAndAccuracy": false,
+    "windowsOSCapture": false,
+    "physicalIPhoneAudio": false,
+    "realOSCredentialVaultOnCurrentPackage": false,
+    "realInstalledUpdate": false,
+    "realEmailDelivery": false
+  },
+  "measurementDefinition": "Application request acceptance to first publishable answer text and completion, with monotonic clocks; excludes screen paint and acoustic/transcription input delay. No legacy timing substitution.",
+  "performanceFixture": {
+    "report": "evidence/performance-fixture-report-v0.4.json",
+    "sha256": "8cd505333290277e1679d237861dac68e59a2d28328e65b7babc322ce24807ec",
+    "class": "fixture",
+    "actualModelOrSpeechProviderRequests": 0,
+    "physicalMicrophoneRecordings": 0,
+    "liveAcceptance": false
+  },
+  "developmentArtifacts": {
+    "artifacts": [
+      {
+        "path": "release/Watson-0.4.0-mac-arm64.zip",
+        "bytes": 140179090,
+        "sha256": "cb3af00777f0ef105a9fee8f2e77fb28f64b6c5321f88d4c3f72f46fd08ebb2c"
+      },
+      {
+        "path": "release/v0.4.0/windows/Watson-0.4.0-win.zip",
+        "bytes": 165485745,
+        "sha256": "5d2dd2fed7850afedaf328ec9088939b7d529c613b871c9f14e7ef1ab88dcc39"
+      },
+      {
+        "path": "ios/release/Watson-iPhone-0.1.0-source.zip",
+        "sha256": "0d8d1978086fe737bfd8bfdf3b7113200d1f9db0377a82b69acc508db40bf649",
+        "bytes": 105898
+      },
+      {
+        "path": "ios/release/Watson-iPhone-0.1.0-simulator-arm64.zip",
+        "sha256": "a3b894193881e21fe32ae9b3528d5b5f2105731a49a8265510c2f9fd3fd80970",
+        "bytes": 1336041
+      },
+      {
+        "path": "ios/release/Watson-iPhone-0.1.0-device-arm64-unsigned.zip",
+        "sha256": "6fbf6f094ce6cfe2569073ca39dff86fde69bb609f44a297ae4b8a1eec11843a",
+        "bytes": 1308852
+      }
+    ],
+    "notarized": false,
+    "releaseSigned": false,
+    "type": "Development archives; iPhone requires Xcode signing for device installation",
+    "publishedInGit": false
+  },
+  "remainingAcceptance": [
+    "Actual authorized corpus recordings and provider outputs",
+    "Acoustic/transcription delay and overall speech-to-answer latency",
+    "Model factual/contextual grounding and Smart coding quality",
+    "Receiver-side exact sharing compatibility",
+    "Physical Windows/iPhone and production distribution/service gates"
+  ],
+  "publicationChecks": {
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    "desktop": {
+      "command": "npm test",
+      "passed": 225,
+      "failed": 0,
+      "skipped": 0
+    },
+    "service": {
+      "command": "npm --prefix server test",
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0
+    },
+    "documentationLinks": "All relative Markdown links resolve to published files.",
+    "secretReview": "No detected live credentials; credential-like literals are isolated test fixtures."
+  }
+}

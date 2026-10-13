@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "measurementClass": "live",
+  "description": "Watson self-authored English starter corpus v1: six distinct microphone/system sessions, a single authorized reader or recording per case, quiet baseline. Operator must add actual speaker, playback, microphone, OS/app, provider/model and network conditions before recording. This template contains no captured results.",
+  "cases": [
+    {
+      "id": "microphone_ownership",
+      "source": "microphone",
+      "export": "microphone_ownership.json",
+      "reference": "Priya owns the launch checklist. Alex will review it tomorrow. We have not decided who will contact the customer."
+    },
+    {
+      "id": "microphone_commitment",
+      "source": "microphone",
+      "export": "microphone_commitment.json",
+      "reference": "We agreed to send the revised proposal after legal review. Please keep the current delivery date until the customer confirms a change."
+    },
+    {
+      "id": "microphone_correction",
+      "source": "microphone",
+      "export": "microphone_correction.json",
+      "reference": "The first draft said the service was unavailable. That was incorrect. The service was running, but new accounts could not sign in."
+    },
+    {
+      "id": "system_requirements",
+      "source": "system",
+      "export": "system_requirements.json",
+      "reference": "The pilot needs searchable meeting notes and a clear owner for every action. An action without an owner should remain unresolved."
+    },
+    {
+      "id": "system_code",
+      "source": "system",
+      "export": "system_code.json",
+      "reference": "The function should return an empty list when the input is missing. It must keep the original order and remove duplicate entries."
+    },
+    {
+      "id": "system_uncertainty",
+      "source": "system",
+      "export": "system_uncertainty.json",
+      "reference": "We discussed a possible delay, but no one approved it. Do not describe the proposed date as a decision. We need confirmation from the project owner."
+    }
+  ]
+}

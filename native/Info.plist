@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>com.watson.capture</string>
+<key>CFBundleName</key><string>Watson Capture</string>
+<key>NSMicrophoneUsageDescription</key><string>Watson uses your microphone to transcribe your side of a meeting.</string>
+<key>NSScreenCaptureUsageDescription</key><string>Watson captures screen context and meeting audio while a session is active.</string>
+<key>NSAudioCaptureUsageDescription</key><string>Watson transcribes meeting audio from your computer.</string>
+</dict></plist>

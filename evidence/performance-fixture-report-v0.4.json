@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "measurementClass": "fixture",
+  "origin": "Provided session exports; live origin and model configuration require separate operator evidence.",
+  "latencyScope": "application-request",
+  "latencyDefinition": "Application acceptance to first answer text available for publication or completed answer; includes context/screen preparation. Excludes screen paint, OS audio input delay and provider-internal token timing.",
+  "normalization": "NFKC, Unicode lowercase, apostrophe normalization, punctuation token boundaries; no number expansion or semantic substitutions. Unit-cost alignment; deterministic diagonal/deletion/insertion tie order.",
+  "percentileMethod": "Nearest rank, measured samples only; no value is inferred for missing timing.",
+  "summary": {
+    "cases": 6,
+    "referenceWords": 132,
+    "errors": 25,
+    "substitutions": 1,
+    "deletions": 23,
+    "insertions": 1,
+    "wer": 0.1893939393939394,
+    "firstText": {
+      "samples": 5,
+      "p50Ms": 90,
+      "p95Ms": 150,
+      "p99Ms": 150
+    },
+    "completion": {
+      "samples": 5,
+      "p50Ms": 400,
+      "p95Ms": 700,
+      "p99Ms": 700
+    },
+    "failedAnswers": 1,
+    "refusedAnswers": 1,
+    "legacyOrMissingTimingAnswers": 0,
+    "missingFirstTextAnswers": 0,
+    "missingCompletionAnswers": 0
+  },
+  "cases": [
+    {
+      "id": "microphone_ownership",
+      "source": "microphone",
+      "finalizedSegments": 1,
+      "referenceWords": 19,
+      "hypothesisWords": 19,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "errors": 0,
+      "wer": 0,
+      "firstText": {
+        "samples": 1,
+        "p50Ms": 50,
+        "p95Ms": 50,
+        "p99Ms": 50
+      },
+      "completion": {
+        "samples": 1,
+        "p50Ms": 200,
+        "p95Ms": 200,
+        "p99Ms": 200
+      },
+      "failedAnswers": 0,
+      "refusedAnswers": 0,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    },
+    {
+      "id": "microphone_commitment",
+      "source": "microphone",
+      "finalizedSegments": 1,
+      "referenceWords": 22,
+      "hypothesisWords": 21,
+      "substitutions": 0,
+      "deletions": 1,
+      "insertions": 0,
+      "errors": 1,
+      "wer": 0.045454545454545456,
+      "firstText": {
+        "samples": 1,
+        "p50Ms": 70,
+        "p95Ms": 70,
+        "p99Ms": 70
+      },
+      "completion": {
+        "samples": 1,
+        "p50Ms": 300,
+        "p95Ms": 300,
+        "p99Ms": 300
+      },
+      "failedAnswers": 0,
+      "refusedAnswers": 0,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    },
+    {
+      "id": "microphone_correction",
+      "source": "microphone",
+      "finalizedSegments": 1,
+      "referenceWords": 22,
+      "hypothesisWords": 22,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "errors": 1,
+      "wer": 0.045454545454545456,
+      "firstText": {
+        "samples": 1,
+        "p50Ms": 90,
+        "p95Ms": 90,
+        "p99Ms": 90
+      },
+      "completion": {
+        "samples": 1,
+        "p50Ms": 400,
+        "p95Ms": 400,
+        "p99Ms": 400
+      },
+      "failedAnswers": 0,
+      "refusedAnswers": 0,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    },
+    {
+      "id": "system_requirements",
+      "source": "system",
+      "finalizedSegments": 1,
+      "referenceWords": 21,
+      "hypothesisWords": 22,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 1,
+      "errors": 1,
+      "wer": 0.047619047619047616,
+      "firstText": {
+        "samples": 1,
+        "p50Ms": 110,
+        "p95Ms": 110,
+        "p99Ms": 110
+      },
+      "completion": {
+        "samples": 1,
+        "p50Ms": 500,
+        "p95Ms": 500,
+        "p99Ms": 500
+      },
+      "failedAnswers": 0,
+      "refusedAnswers": 0,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    },
+    {
+      "id": "system_code",
+      "source": "system",
+      "finalizedSegments": 1,
+      "referenceWords": 22,
+      "hypothesisWords": 0,
+      "substitutions": 0,
+      "deletions": 22,
+      "insertions": 0,
+      "errors": 22,
+      "wer": 1,
+      "firstText": {
+        "samples": 0,
+        "p50Ms": null,
+        "p95Ms": null,
+        "p99Ms": null
+      },
+      "completion": {
+        "samples": 0,
+        "p50Ms": null,
+        "p95Ms": null,
+        "p99Ms": null
+      },
+      "failedAnswers": 1,
+      "refusedAnswers": 0,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    },
+    {
+      "id": "system_uncertainty",
+      "source": "system",
+      "finalizedSegments": 1,
+      "referenceWords": 26,
+      "hypothesisWords": 26,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "errors": 0,
+      "wer": 0,
+      "firstText": {
+        "samples": 1,
+        "p50Ms": 150,
+        "p95Ms": 150,
+        "p99Ms": 150
+      },
+      "completion": {
+        "samples": 1,
+        "p50Ms": 700,
+        "p95Ms": 700,
+        "p99Ms": 700
+      },
+      "failedAnswers": 0,
+      "refusedAnswers": 1,
+      "legacyOrMissingTimingAnswers": 0,
+      "missingFirstTextAnswers": 0,
+      "missingCompletionAnswers": 0
+    }
+  ],
+  "corpusManifestSha256": "375aa685821501d1b1cc65636e4156a6f3a4c724a1c44f47e6304f769e911f0d",
+  "exportSha256": [
+    {
+      "id": "microphone_ownership",
+      "sha256": "fc90eac8d1e804f038dd6a7de0e4ab09c04b2277015d968649096463e2e0465d"
+    },
+    {
+      "id": "microphone_commitment",
+      "sha256": "b9c91f8d69ec51a678c825fe885eb6ceba052b80a1ba30eabbe91c4dae8c1963"
+    },
+    {
+      "id": "microphone_correction",
+      "sha256": "ae0a6ca7ecbdc5f621aa255105cbe168d6b4fd43074162b724357f1987a6d7fb"
+    },
+    {
+      "id": "system_requirements",
+      "sha256": "b4ddfc94c303714f94137183e4d389b5abde5d59f7568dc64799d261ce2e92f5"
+    },
+    {
+      "id": "system_code",
+      "sha256": "8291a0a7165428acf2056ad81adc982d613a398bdae40c2271bbaaed24562e36"
+    },
+    {
+      "id": "system_uncertainty",
+      "sha256": "b7cdbfcc37802ff8bb65ea6193b8a39fd6b3a908e9a7e9a32ae2237fd6027499"
+    }
+  ],
+  "contextDescriptionStoredInInput": true,
+  "rawTranscriptOrAnswerTextIncluded": false
+}

@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "appId": "com.watson.app",
+  "channel": "stable",
+  "feedUrl": "",
+  "artifactOrigins": [],
+  "publicKeys": {},
+  "signing": {},
+  "maxDownloadBytes": 786432000,
+  "maxExtractedBytes": 4294967296,
+  "maxEntryBytes": 536870912,
+  "maxEntries": 100000,
+  "requestTimeoutMs": 120000,
+  "configurationGates": [
+    "Developer ID signing and notarization credentials have not been configured.",
+    "Windows Authenticode signing credentials have not been configured.",
+    "A release verification key and published HTTPS feed have not been configured."
+  ]
+}

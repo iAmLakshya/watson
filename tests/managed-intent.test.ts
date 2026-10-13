@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Engine } from '../electron/engine';
+import { Store } from '../electron/store';
+import { DEFAULT_SETTINGS } from '../shared/defaults';
+import { managedAssistIntent, managedPreparationRequest, preparationModeRoute } from '../electron/managed-intent';
+import { PreparationScheduler } from '../electron/preparation';
+import type { CloudAssistantInput } from '../shared/cloud-types';
+
+test('managed Engine honors Smart web opt-out while keeping reasoning intent and operator model configuration private',async()=>{
+  const directory=await mkdtemp(join(tmpdir(),'watson-managed-intent-'));const store=new Store(directory);store.key=()=>undefined;store.credentialStatus=()=>({openai:false,deepgram:false,secureStorage:false});const wire:CloudAssistantInput[]=[];let personalRequests=0;
+  const engine=new Engine(store,'/not-native',()=>{},{version:()=> 'fixture',permissions:()=>({microphone:'denied',screen:'denied'}),capture:{available:false,async start(){throw new Error('No capture authorized');},async stop(){},async screenshot(){throw new Error('No screen authorized');}},stream:async()=>{personalRequests++;throw new Error('No personal fallback');},managedStream:async(input,delta)=>{wire.push(input);delta('Fixture server answer');return {text:'Fixture server answer',sources:[]};}});
+  try{const session=store.createSession('Saved managed fixture',false,'shared:mode:assigned');session.endedAt=new Date().toISOString();session.transcript=[{id:'l1',text:'Explain the planned change.',timestamp:session.startedAt,final:true,source:'system'}];engine.setSharedResources({knowledge:[],scorecards:[],modes:[{id:session.modeId,name:'Assigned descriptor',instructions:'',noteTemplate:'',documentIds:[],shared:true,assigned:true,inference:'server'}]});store.data.settings={...store.data.settings,smartMode:true,smartWebSearch:false,smartModel:'personal-only-model',smartReasoningEffort:'xhigh',smartMaxOutputTokens:128000};const answer=await engine.assist({sessionId:session.id,includeScreen:false});assert.equal(answer.status,'complete');assert.equal(wire[0].smart,true);assert.equal(wire[0].webResearch,false);assert.equal(wire[0].researchOnly,undefined);assert.equal('model' in wire[0],false);assert.equal('reasoningEffort' in wire[0],false);assert.equal('maxOutputTokens' in wire[0],false);assert.equal('instructions' in wire[0],false);assert.equal(personalRequests,0);store.data.settings.smartWebSearch=true;await engine.assist({sessionId:session.id,includeScreen:false});assert.equal(wire[1].webResearch,true);store.data.settings.smartMode=false;await engine.assist({sessionId:session.id,includeScreen:false});assert.equal(wire[2].smart,false);assert.equal(wire[2].webResearch,false);}finally{await engine.dispose();await rm(directory,{recursive:true,force:true});}
+});
+test('managed coaching is transcript-only regardless of personal Smart research preference',()=>{
+  assert.deepEqual(managedAssistIntent({...DEFAULT_SETTINGS,smartMode:true,smartWebSearch:true},true),{smart:false,webResearch:false});
+});
+test('revoked shared preparation modes do not silently switch to a personal provider',()=>{assert.equal(preparationModeRoute('shared:mode:revoked',undefined),'unavailable');assert.equal(preparationModeRoute('general',{id:'general',name:'Personal',instructions:'',noteTemplate:'',documentIds:[]}), 'personal');assert.equal(preparationModeRoute('shared:mode:assigned',{id:'shared:mode:assigned',name:'Assigned',instructions:'',noteTemplate:'',documentIds:[],inference:'server'}),'managed');});
+test('actual preparation adapter sends separate research-only intent with sourced results and no personal model override',async()=>{
+  let sent:CloudAssistantInput|undefined;const configuration={model:'managed:assigned',outputLanguage:'English',available:true};
+  const scheduler=new PreparationScheduler({settings:()=>({automaticPreparation:false}),configuration:()=>configuration,snapshot:()=>({events:[{id:'calendar-local',title:'Supplied participant preparation',start:'2026-10-13T12:00:00Z',end:'2026-10-13T13:00:00Z',description:'Discuss public project context',attendees:[{name:'Taylor Supplied',email:'taylor@example.test'}]}],contextScope:'managed-authorized-fixture'}),now:()=>Date.parse('2026-10-12T12:00:00Z'),research:async(context,config)=>{sent=managedPreparationRequest(context,config,false);return {text:'Fixture sourced research result.',sources:[{id:'https://example.test/public',title:'Public fixture',kind:'web',url:'https://example.test/public'}]};}});
+  try{const entry=await scheduler.prepare('calendar-local');assert.equal(entry.status,'ready');assert.equal(sent!.kind,'brief');assert.equal(sent!.smart,true);assert.equal(sent!.webResearch,true);assert.equal(sent!.researchOnly,true);assert.equal(sent!.calendarEventId,undefined);assert.equal(sent!.scope,'calendar');assert.match(sent!.question!,/Taylor Supplied/);assert.equal('model' in sent!,false);assert.equal('key' in sent!,false);assert.equal('reasoningEffort' in sent!,false);assert.ok(sent!.question!.length<20000);assert.ok(entry.sources.some(source=>source.kind==='web'));}finally{await scheduler.dispose();}
+});

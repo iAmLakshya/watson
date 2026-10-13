@@ -1,0 +1,10 @@
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+import { fail } from '../core.ts';
+export function secretKey(value: string | undefined): Buffer {
+  if(!value)fail(503,'secret_storage_unconfigured','Set WATSON_SECRET_KEY to a base64 encoded 32-byte encryption key.');
+  const key=Buffer.from(value,'base64');if(key.length!==32)fail(503,'secret_storage_unconfigured','WATSON_SECRET_KEY must decode to exactly 32 bytes.');return key;
+}
+export function seal(value: unknown,key:Buffer):string {const nonce=randomBytes(12),cipher=createCipheriv('aes-256-gcm',key,nonce);const data=Buffer.concat([cipher.update(JSON.stringify(value),'utf8'),cipher.final()]);return [nonce,cipher.getAuthTag(),data].map(x=>x.toString('base64url')).join('.');}
+export function unseal<T=unknown>(value:string,key:Buffer):T {const [iv,tag,data]=value.split('.').map(x=>Buffer.from(x,'base64url'));const cipher=createDecipheriv('aes-256-gcm',key,iv);cipher.setAuthTag(tag);return JSON.parse(Buffer.concat([cipher.update(data),cipher.final()]).toString('utf8')) as T;}
+export function endpoint(value:string,allowInsecureLoopback = false): URL {let url:URL;try{url=new URL(value);}catch{fail(503,'invalid_provider_config','Provider endpoint is invalid.');}if(url.username||url.password||url.hash||(url.protocol!=='https:'&&!(allowInsecureLoopback&&url.protocol==='http:'&&['127.0.0.1','localhost','[::1]'].includes(url.hostname))))fail(503,'invalid_provider_config','Provider endpoint requires HTTPS.');return url;}
+export async function fetchJson(url:string,init:RequestInit={}):Promise<any> {const response=await fetch(url,{...init,signal:AbortSignal.timeout(15000),redirect:'error'});if(!response.ok)fail(502,'provider_error',`Provider request failed (${response.status}).`);const content=await response.text();if(content.length>2_000_000)fail(502,'provider_error','Provider response is too large.');try{return JSON.parse(content);}catch{fail(502,'provider_error','Provider returned invalid JSON.');}}
